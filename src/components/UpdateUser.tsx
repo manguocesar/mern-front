@@ -25,8 +25,8 @@ export default function UpdateUser({ user, updatePannel, index }:UpdateUserType)
           },
           body: JSON.stringify({userUpdatedInfo,token})
         });
-      }, []);
-
+  }, []);
+  
     return (
   <>
     {updatePannel === index && <div className="update_user_ctn">

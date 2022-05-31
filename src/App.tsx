@@ -20,7 +20,9 @@ function App() {
     return res.json();
   }
   
-  const { data, status } = useQuery("userData",callApi)
+  const { data, status } = useQuery("userData", callApi, {
+    keepPreviousData: true
+  })
 
   const deleteUser = (userId: number) => {
     setDeleteModal(true);

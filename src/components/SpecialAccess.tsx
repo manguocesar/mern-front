@@ -1,7 +1,8 @@
 import "./SpecialAccess.css"
-import { useCallback, useState } from "react";
+import {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Stack } from "@mui/material";
+import { useMutation } from "react-query";
 
 export default function SpecialAccess() {
  const [isRegistered, setIsRegistered]=useState(false)
@@ -9,27 +10,30 @@ export default function SpecialAccess() {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm();
-    
-    const logIn = useCallback(async (logInInfo:any) => {
+  } = useForm();
+  
+  const mutation = useMutation(
+    async (logInInfo:any) => {
         
-        const userCreatedInfo = {
-           username: logInInfo.userName,
-           password: logInInfo.password,
-           email: logInInfo.email,
-        };
-        let res = await fetch(`http://localhost:8000/api/auth/${ isRegistered? "login" : "register"}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(userCreatedInfo)
-        });
-      let data = await res.json()
-     
-      localStorage.setItem("token", data.token)
-      console.log("res", localStorage.getItem("token"));  
-    }, [isRegistered]);
+      const userCreatedInfo = {
+         username: logInInfo.userName,
+         password: logInInfo.password,
+         email: logInInfo.email,
+      };
+      let res = await fetch(`http://localhost:8000/api/auth/${ isRegistered? "login" : "register"}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userCreatedInfo)
+      });
+    let data = await res.json()
+   
+    localStorage.setItem("token", data.token)
+    console.log("res", localStorage.getItem("token"));  
+  }
+  )
+    
 
   return (
       <div className="login_ctn">
@@ -39,7 +43,7 @@ export default function SpecialAccess() {
             </Stack>
           <form
           className="add_user_form"
-          onSubmit={handleSubmit((logInInfo) => logIn(logInInfo))}
+          onSubmit={handleSubmit((logInInfo) => mutation.mutate(logInInfo))}
           >
               {isRegistered? <p>Login</p> : <p>SignUp</p>}
           <label>User name</label>
